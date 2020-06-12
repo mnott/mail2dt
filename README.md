@@ -154,7 +154,11 @@ Finally, you open a command line and do this:
 1. You should have installed and started Docker
 2. You should have created a directory `mail2dt` beneath your home directory (either by
    just downloading and extracting the ZIP file of this repository,
+<<<<<<< HEAD
    or by installing Git, and cloning this repository - into your home folder).
+=======
+   or by installing Git, and cloning this repository - into your home folder.
+>>>>>>> 5ff5c9d39a8111274602d5725904be1866e64bac
 
 
 ## CONFIGURATION
@@ -164,9 +168,12 @@ configure for you. This entails the following steps:
 
 1. Start the Docker Container (that's where the IMAP Server is running)
 2. Configure your existing Mail Client (so, Apple Mail or Outlook)
+<<<<<<< HEAD
 3. Add the import script to DevonThink's toolbar, and optionally configure
 that script if you also want it to immediately file away the newly imported
 emails.
+=======
+>>>>>>> 5ff5c9d39a8111274602d5725904be1866e64bac
 
 ### Start the Docker Container
 
