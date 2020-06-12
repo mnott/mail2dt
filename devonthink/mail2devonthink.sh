@@ -12,6 +12,15 @@ export PATH=/usr/local/bin/:$PATH
 CONTAINER_NAME=mail2dt
 CONTAINER_ID=$(docker container ls | grep $CONTAINER_NAME | cut -d" " -f1)
 
+if [[ $CONTAINER_ID == "" ]]; then
+	echo Cannot find Docker Container.
+	exit 1
+fi
+
+if [[ $VERBOSE == true ]]; then
+	echo Using Docker Container $CONTAINER_ID
+fi
+
 for src in new cur; do
 	for i in $MAILDIR/$src/*; do
 		FILE=$i;
