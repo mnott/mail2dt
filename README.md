@@ -415,8 +415,10 @@ files within the inbox of DevonThink: The IMAP server names the
 files arbitrarily, and if we would just copy those files, with
 their original names, into DevonThink, the names shown would
 not be readable. Hence what we do here is to use a second
-script, `devonthink/subject-decoder.pl`, to read each mail's
-subject line, and create a filename out of that. And in case
+script, `root/usr/local/bin/subject-decoder.pl`, to read each mail's
+subject line, and create a filename out of that (since this file
+requires some Perl modules, we run it inside the Docker container
+where we can ensure we have what we need). And in case
 the subject would not be unique, to not overwrite a potentially
 existing file in the inbox of DevonThink, we append a counter to
 the filename if necessary.
