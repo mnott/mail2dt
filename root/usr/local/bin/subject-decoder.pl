@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -w
+#!/usr/bin/perl -w
 
 use MIME::Base64 qw(decode_base64);
 use URI::Encode qw(uri_decode);
