@@ -6,6 +6,8 @@ mail2dt - Docker Image for E-Mail Archiving
 
 Version 0.0.1
 
+This program was first announced [here](https://discourse.devontechnologies.com/t/email-archiving-solutions-using-a-docker-container-as-an-intermediate-imap-server/56543).
+
 # LICENCE AND COPYRIGHT
 
 Copyright (c) 2020 Matthias Nott (mnott (at) mnsoft.org).
