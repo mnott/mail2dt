@@ -127,7 +127,7 @@ into it's own directory. So for that, you would click
 extract it to your home folder so that you essentially get a folder
 
 	~/mail2dt
-	
+
 Then, head over to the configuration part below.
 
 ##### If you want to use Git
@@ -154,11 +154,7 @@ Finally, you open a command line and do this:
 1. You should have installed and started Docker
 2. You should have created a directory `mail2dt` beneath your home directory (either by
    just downloading and extracting the ZIP file of this repository,
-<<<<<<< HEAD
    or by installing Git, and cloning this repository - into your home folder).
-=======
-   or by installing Git, and cloning this repository - into your home folder.
->>>>>>> 5ff5c9d39a8111274602d5725904be1866e64bac
 
 
 ## CONFIGURATION
@@ -168,12 +164,9 @@ configure for you. This entails the following steps:
 
 1. Start the Docker Container (that's where the IMAP Server is running)
 2. Configure your existing Mail Client (so, Apple Mail or Outlook)
-<<<<<<< HEAD
 3. Add the import script to DevonThink's toolbar, and optionally configure
 that script if you also want it to immediately file away the newly imported
 emails.
-=======
->>>>>>> 5ff5c9d39a8111274602d5725904be1866e64bac
 
 ### Start the Docker Container
 
@@ -181,11 +174,11 @@ Since above you already went into the `~/mail2dt` directory, within
 that directory, you can simply say
 
 	./run.sh
-	
+
 That will install and run the docker image like so:
 
 
-	mnott[17:10:23]@MatthiasMacBook:~/mail2dt$ ./run.sh 
+	mnott[17:10:23]@MatthiasMacBook:~/mail2dt$ ./run.sh
 	uid=90(dovecot) gid=101(dovecot) groups=101(dovecot),101(dovecot)
 	Jun 12 16:21:30 6a399b7c3af8 syslog.info syslogd started: BusyBox v1.27.2
 	Jun 12 16:21:30 6a399b7c3af8 mail.info dovecot: master: Dovecot v2.2.36.4 (baf9232c1) starting up for imap (core dumps disabled)
@@ -211,14 +204,14 @@ to a new mailserver. As mailserver, you use:
 	Incoming Mail Server: 127.0.0.1
 	User name: mailuser
 	Password: mailpass
-	
+
 For the moment, we assume that we are going to move mails into the
 **Inbox** of that new mail server. Further below, I'll explain
 what you need to do if you want to have the mails going through
 some other folder on that new Mail server. So go ahead, and copy
 some Mail into that new mail server's Inbox.
 
-	
+
 ### Configure Devon Think
 
 The rest of this section shows how to modify where this program
@@ -247,7 +240,8 @@ by just double-clicking on the file.
 
 Right at the top of the file, you'll see this:
 
-	-- set ruleList to {"00 - Import Emails", "Rule 1", "Rule 2", "Rule 3"}	set ruleList to {}
+	-- set ruleList to {"00 - Import Emails", "Rule 1", "Rule 2", "Rule 3"}
+	set ruleList to {}
 
 Actually, this script can do a lot more than just importing Mails.
 For that, it would be sufficient to copy the mails into the Inbox
@@ -346,7 +340,7 @@ copy a mail into this IMAP server, what happens is that it will
 create a file of that mail (containing all attachments) on disk.
 And the location where we want him to store that file is not within
 the container, but within a location outside of that container, so
-that with the script described below, we can move that file from 
+that with the script described below, we can move that file from
 there into the inbox of DevonThink.
 
 
@@ -359,7 +353,7 @@ into the inbox of DevonThink.
 At the top of that file, you can see
 
 	ROOTDIR=~/mail2dt
-	
+
 You would need to change that directory to something else if you
 had installed the git repository somewhere else.
 
@@ -391,7 +385,7 @@ same username into the file `devonthink/mail2devonthink.sh`:
 At the top, there is a setting
 
 	MAILUSR=mailuser
-	
+
 You would have to change that settings.
 
 Similarly, within `dovecot.passwd`, you could exchange the
@@ -437,7 +431,7 @@ you'll see some configuration options:
 	CLEANUP=false
 	VERBOSE=true
 
-The `ROOTDIR` and `MAILUSR` we already spoke about. The `DTINBOX` 
+The `ROOTDIR` and `MAILUSR` we already spoke about. The `DTINBOX`
 variable contains the actual location of your DevonThink inbox.
 If you have that in another place, change that reference here.
 
@@ -446,7 +440,7 @@ in other words, to the directory where the IMAP server would
 store its mails, and from where the `mail2devonthink.sh`
 would take them to transfer them over to the DevonThink inbox.
 
-Since there is a full fledged IMAP server that is 
+Since there is a full fledged IMAP server that is
 running within the Docker container, you might want to use some
 subdirectory of that `MAILDIR` (in other words, a folder within
 your IMAP server). If you do so, just create that folder from
@@ -472,7 +466,7 @@ before you do that. You can always run the script just from
 the command line like so:
 
 	./devonthink/mail2devonthink.sh
-	
+
 and if you do so, you will then see what is going on. If you
 want to make the script rather not say what it does, you can
 later set the `VERBOSE` variable to `false`.
@@ -482,19 +476,19 @@ later set the `VERBOSE` variable to `false`.
 
 #### The Docker Container
 
-Far above, you've learned to use the 
+Far above, you've learned to use the
 
 	./run.sh
-	
+
 script to start the Docker container. It will optionally
 download what is needed, create the container, and run
 it. To get out of it, you just hit `Ctrl+C`.
 
 From a directory structure perspective, there are three
-directories that are relevant here. 
+directories that are relevant here.
 
 
-* The `config` directory is there to configure the password 
+* The `config` directory is there to configure the password
 of the IMAP server.
 * The `mail` directory is where the mail files are put by the
 IMAP server.
@@ -512,7 +506,7 @@ script that I've written. It's just called `d`. You can call it
 like so:
 
 	./d
-	
+
 It will come up with a menu for you:
 
 	-------------------------------------------
@@ -521,8 +515,8 @@ It will come up with a menu for you:
 
 	Compose
 
-	[up]    Up      
-	[down]  Down    
+	[up]    Up
+	[down]  Down
 
 	Containers
 
@@ -548,7 +542,7 @@ It will come up with a menu for you:
 
 	[con]   Connect to Container
 
-	Enter choice or q to exit: 
+	Enter choice or q to exit:
 
 
 So if you want to take that docker container up,
@@ -591,7 +585,7 @@ the runnign Container using the `con` command:
 
 	CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                  NAMES
 	8fa24fa71098        mnott/mail          "/run.sh"           3 minutes ago       Up 29 seconds       0.0.0.0:993->993/tcp   mail2dt_mail_1
-	Enter Container name to connect to: [8f] 
+	Enter Container name to connect to: [8f]
 
 	bash-4.4# ls
 	bin     config  dev     etc     home    lib     mail    media   mnt     proc    root    run     run.sh  sbin    srv     sys     tmp     usr     var
