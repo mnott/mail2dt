@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: $PWD/Dockerfile
     image: mnott/mail
+    restart: always
     ports:
       - "993:993"
     volumes:
