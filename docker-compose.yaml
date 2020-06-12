@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  mail:
+    build:
+      context: .
+      dockerfile: $PWD/Dockerfile
+    image: mnott/mail
+    ports:
+      - "993:993"
+    volumes:
+      - ~/mail2dt/mail:/mail
+      - ~/mail2dt/config:/config
+    environment:
+      - DISPLAY
+    stdin_open: true
+    tty: true
+    entrypoint: /run.sh
