@@ -139,6 +139,22 @@ stop_running_container() {
   done
 }
 
+kill_running_container() {
+  if [[ "" == "$1" ]]; then
+    list_running_containers
+    readinput -e -p "Enter Container name to stop: " -i "$vmname" vmname
+    if [[ "" == "$vmname" ]]; then return; fi
+  else
+    vmname=$1
+  fi
+
+  for i in $vmname; do
+    echo ""
+    docker kill "$i"
+    echo ""
+  done
+}
+
 start_container() {
   if [[ "" == "$1" ]]; then
     list_stopped_containers
@@ -276,6 +292,7 @@ show_menus() {
     echo ""
     echo -e "${GRE}[start]${STD} Start   Container"
     echo -e "${GRE}[stop]${STD}  Stop    Container"
+    echo -e "${GRE}[kill]${STD}  Kill    Container"
     echo -e "${GRE}[rm]${STD}    Remove  Container"
     echo -e "${GRE}[rms]${STD}   Remove  Stopped Containers"
     echo ""
@@ -307,6 +324,7 @@ read_options(){
         ls)    list_running_containers;pause;;
         la)    list_all_containers;pause;;
         stop)  stop_running_container;pause;;
+        kill)  kill_running_container;pause;;
         start) start_container;pause;;
         rm)    remove_container;pause;;
         rms)   remove_stopped_containers;pause;;
