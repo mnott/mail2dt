@@ -14,6 +14,10 @@ Copyright (c) 2020 Matthias Nott (mnott (at) mnsoft.org).
 
 Licensed under [WTFPL](http://www.wtfpl.net/).
 
+# Credits
+
+This work is based on the minimalistic dovecot container created by [Alan Dixon](https://github.com/BlackflySolutions/dovecot).
+
 
 # INTRODUCTION
 
