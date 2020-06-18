@@ -2,6 +2,9 @@
 
 use MIME::Base64 qw(decode_base64);
 use URI::Encode qw(uri_decode);
+use URI::Escape qw(uri_unescape);
+
+#binmode STDOUT, ':utf8';
 
 my $filename = "";
 my $filename_part = "";
@@ -25,13 +28,24 @@ while ( <> ) {
 
 sub subject_decode {
 	my ($subject) = @_;
-	1 while $subject =~ s{(.*?)=\?[uU][tT][fF]-8\?B\?(.*?)\?=(.*)}{"$1".decode_base64($2)."$3"}eg;
-	1 while $subject =~ s{(.*?)=\?[uU][tT][fF]-8\?Q\?(.*?)\?=(.*)}{"$1".url_decode($2)."$3"}eg;
+	1 while $subject =~ s{(.*?)=\?[uU][tT][fF]-?8\?[bB]\?(.*?)\?=(.*)}{"$1".decode_base64($2)."$3"}eg;
+	1 while $subject =~ s{(.*?)=\?[uU][tT][fF]-?8\?[qQ]\?(.*?)\?=(.*)}{"$1".utf8_decode($2)."$3"}eg;
+	1 while $subject =~ s{(.*?)=\?[iI][sS][oO].*?\?[bB]\?(.*?)\?=(.*)}{"$1".decode_base64($2)."$3"}eg;
+	1 while $subject =~ s{(.*?)=\?[iI][sS][oO].*?\?[qQ]\?(.*?)\?=(.*)}{"$1".iso_decode($2)."$3"}eg;
+	$subject =~ s/:/ -/g;
 	return $subject;
 }
 
-sub url_decode {
-	my ($url) = @_;
-	$url =~ s/=/%/g;
-	return uri_decode($url);
+sub utf8_decode {
+	my ($str) = @_;
+	$str =~ s/=/%/g;
+	$str = uri_unescape(uri_decode($str));
+	return $str;
+}
+
+sub iso_decode {
+	my ($str) = @_;
+	$str =~ s/=/%/g;
+	$str = uri_unescape(uri_decode($str, 'iso-8859-1'));
+	return $str;
 }

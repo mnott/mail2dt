@@ -9,6 +9,7 @@ RUN apk -U add perl dovecot shadow bash make
 RUN perl -MCPAN -e "CPAN::Shell->notest('install', 'inc::latest')"
 RUN perl -MCPAN -e "CPAN::Shell->notest('install', 'MIME::Base64')"
 RUN perl -MCPAN -e "CPAN::Shell->notest('install', 'URI::Encode')"
+RUN perl -MCPAN -e "CPAN::Shell->notest('install', 'URI::Escape')"
 
 RUN mkdir /mail && mkdir /config
 

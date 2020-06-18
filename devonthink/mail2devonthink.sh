@@ -29,9 +29,8 @@ for src in new cur; do
 			if [[ ! -f "$DTINBOX/$TARGET.eml" ]]; then
 				cp -a "$FILE" "$DTINBOX/$TARGET.eml";
 			else
-				digit=1;
 				while true; do
-					temp_name="$TARGET-$digit";
+					temp_name="${TARGET}.";
 					if [[ ! -f "$DTINBOX/$temp_name.eml" ]]; then
 						if [[ "$temp_name" == "-1" ]]; then break; fi;
 						cp -a "$FILE" "$DTINBOX/$temp_name.eml";
