@@ -12,6 +12,7 @@ services:
     volumes:
       - ~/mail2dt/mail:/mail
       - ~/mail2dt/config:/config
+      - ~/mail2dt/devonthink:/devonthink
     environment:
       - DISPLAY
     stdin_open: true
