@@ -20,6 +20,10 @@ chown -R dovecot:dovecot /config
 chown dovecot:dovecot /mail
 chmod +x /mail
 
+if [ -f "/mail/dovecot.passwd" ]; then
+  cp /mail/dovecot.passwd /config
+fi
+
 if [ ! -f "/config/dovecot.passwd" ]; then
   die "/config/dovecot.passwd does not exist - please create it. an example:
   (username):(password with scheme):(uid):(gid)::(virtual home folder)

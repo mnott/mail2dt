@@ -3,8 +3,8 @@
 ROOTDIR=~/mail2dt
 MAILUSR=mailuser
 DTINBOX=~/Library/Application\ Support/DEVONthink\ 3/Inbox/
-MAILDIR=$ROOTDIR/mail/$MAILUSR/Maildir
-CLEANUP=false
+MAILDIR=$ROOTDIR/mail/$MAILUSR/Maildir/.Archive
+CLEANUP=true
 VERBOSE=true
 
 export PATH=/usr/local/bin/:$PATH

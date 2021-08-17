@@ -6,3 +6,7 @@ mail/*
 
 # exception to the rule
 !mail/.gitkeep
+
+# password file
+config/dovecot.passwd
+/config/dovecot.passwd

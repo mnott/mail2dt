@@ -14,6 +14,9 @@ RUN perl -MCPAN -e "CPAN::Shell->notest('install', 'URI::Escape')"
 RUN mkdir /mail && mkdir /config
 
 COPY root/ /
+COPY config/10-auth.conf /etc/dovecot/conf.d
+COPY config/*pem /config
+COPY mail/dovecot.passwd /config
 
 RUN chmod 755 /usr/local/bin/log
 
