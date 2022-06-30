@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: $PWD/Dockerfile
     image: mnott/mail
+    container_name: mail2dt
     restart: always
     ports:
       - "993:993"
