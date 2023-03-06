@@ -28,7 +28,7 @@ for src in new cur; do
 		fi
 		FILE=$i;
 		if [[ -f "$FILE" ]]; then
-			TARGET="$(cat $FILE | docker exec --privileged -i $CONTAINER_ID perl /usr/local/bin/subject-decoder.pl)";
+			TARGET="$(cat "$FILE" | docker exec --privileged -i "$CONTAINER_ID" perl /usr/local/bin/subject-decoder.pl)";
 			if [[ $VERBOSE = true ]]; then echo $TARGET; fi
 			if [[ ! -f "$DTINBOX/$TARGET.eml" ]]; then
 				cp -a "$FILE" "$DTINBOX/$TARGET.eml";

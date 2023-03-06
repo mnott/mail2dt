@@ -51,5 +51,6 @@ sub iso_decode {
 	my ($str) = @_;
 	$str =~ s/=/%/g;
 	$str = uri_unescape(uri_decode($str, 'iso-8859-1'));
+	$str = uri_unescape(uri_decode($str, 'windows-1252'));
 	return $str;
 }
