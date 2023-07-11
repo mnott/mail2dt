@@ -13,12 +13,11 @@ my $in_subject = 0;
 while ( <> ) {
 	#chomp;
 	#print "0: $_\n";
-	if (m/^Subject: (.*)$/) {
+	if (m/^Subject:(.*)$/) {
 		#print "1 $1\n";
 		$in_subject = 1;
 		$filename .= subject_decode($1);
 	} elsif ( $in_subject == 1 ) {
-		#print "2 $1\n";
 		if ( m/^ (.*)$/ ) {
 			$filename .= subject_decode($1);
 		} else {
