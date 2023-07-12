@@ -3,6 +3,7 @@
 use MIME::Base64 qw(decode_base64);
 use URI::Encode qw(uri_decode);
 use URI::Escape qw(uri_unescape);
+use Text::Unidecode;
 
 #binmode STDOUT, ':utf8';
 
@@ -22,6 +23,8 @@ while ( <> ) {
 			$filename .= subject_decode($1);
 		} else {
 			$filename =~ s![/_]! !g;
+			$filename =~ s/^\s+//; # remove leading whitespace
+			$filename = unidecode($filename);
 			print "$filename\n";
 			last;
 		}
