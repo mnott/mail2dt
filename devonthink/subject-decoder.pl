@@ -22,9 +22,9 @@ while ( <> ) {
 		if ( m/^ (.*)$/ ) {
 			$filename .= subject_decode($1);
 		} else {
-			$filename =~ s![/_]! !g;
 			$filename =~ s/^\s+//; # remove leading whitespace
 			$filename = unidecode($filename);
+			$filename =~ s![/_]! !g;
 			print "$filename\n";
 			last;
 		}
