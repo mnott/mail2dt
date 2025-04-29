@@ -54,6 +54,7 @@ sub utf8_decode {
 	my ($str) = @_;
 	$str =~ s/=/%/g;
 	$str = uri_unescape(uri_decode($str));
+	$str =~ s/_/ /g;  # Convert any underscores back to spaces
 	return $str;
 }
 
@@ -62,5 +63,6 @@ sub iso_decode {
 	$str =~ s/=/%/g;
 	$str = uri_unescape(uri_decode($str, 'iso-8859-1'));
 	$str = uri_unescape(uri_decode($str, 'windows-1252'));
+	$str =~ s/_/ /g;  # Convert any underscores back to spaces
 	return $str;
 }
