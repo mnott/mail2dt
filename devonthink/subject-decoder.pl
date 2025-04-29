@@ -3,19 +3,18 @@
 use MIME::Base64 qw(decode_base64);
 use URI::Encode qw(uri_decode);
 use URI::Escape qw(uri_unescape);
-use Text::Unidecode;
+use Encode qw(decode encode);
+use Unicode::Normalize;
 
-#binmode STDOUT, ':utf8';
+binmode STDOUT, ':utf8';
+binmode STDIN, ':utf8';
 
 my $filename = "";
 my $filename_part = "";
 my $in_subject = 0;
 
 while ( <> ) {
-	#chomp;
-	#print "0: $_\n";
 	if (m/^Subject:(.*)$/) {
-		#print "1 $1\n";
 		$in_subject = 1;
 		$filename .= subject_decode($1);
 	} elsif ( $in_subject == 1 ) {
@@ -23,8 +22,9 @@ while ( <> ) {
 			$filename .= subject_decode($1);
 		} else {
 			$filename =~ s/^\s+//; # remove leading whitespace
-			$filename = unidecode($filename);
-			$filename =~ s![/_]! !g;
+			# Only clean up characters that are actually problematic for filesystems
+			$filename =~ s/[\/\\]/-/g;  # Replace slashes with hyphen
+			$filename =~ s/[\x00-\x1F\x7F]//g;  # Remove control characters
 			print "$filename\n";
 			last;
 		}
@@ -33,12 +33,20 @@ while ( <> ) {
 
 sub subject_decode {
 	my ($subject) = @_;
-	1 while $subject =~ s{(.*?)=\?[uU][tT][fF]-?8\?[bB]\?(.*?)\?=(.*)}{"$1".decode_base64($2)."$3"}eg;
-	1 while $subject =~ s{(.*?)=\?[uU][tT][fF]-?8\?[qQ]\?(.*?)\?=(.*)}{"$1".utf8_decode($2)."$3"}eg;
-	1 while $subject =~ s{(.*?)=\?[iI][sS][oO].*?\?[bB]\?(.*?)\?=(.*)}{"$1".decode_base64($2)."$3"}eg;
-	1 while $subject =~ s{(.*?)=\?[iI][sS][oO].*?\?[qQ]\?(.*?)\?=(.*)}{"$1".iso_decode($2)."$3"}eg;
+	1 while $subject =~ s{(.*?)=\?[uU][tT][fF]-?8\?[bB]\?(.*?)\?=(.*)}{"$1".decode('UTF-8', decode_base64($2))."$3"}eg;
+	1 while $subject =~ s{(.*?)=\?[uU][tT][fF]-?8\?[qQ]\?(.*?)\?=(.*)}{"$1".decode('UTF-8', utf8_decode($2))."$3"}eg;
+	1 while $subject =~ s{(.*?)=\?[iI][sS][oO].*?\?[bB]\?(.*?)\?=(.*)}{"$1".decode('ISO-8859-1', decode_base64($2))."$3"}eg;
+	1 while $subject =~ s{(.*?)=\?[iI][sS][oO].*?\?[qQ]\?(.*?)\?=(.*)}{"$1".decode('ISO-8859-1', iso_decode($2))."$3"}eg;
+
+	# Normalize Unicode characters
+	$subject = NFC($subject);
+
 	$subject =~ s/&/u/g;
 	$subject =~ s/:/ -/g;
+
+	# Remove any remaining control characters
+	$subject =~ s/[\x00-\x1F\x7F]//g;
+
 	return $subject;
 }
 

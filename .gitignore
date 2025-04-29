@@ -1,6 +1,8 @@
 # Mac Crap
 .DS_Store
 
+.vscode
+
 # Mail Subdirectories the user might want to change
 mail/*
 
