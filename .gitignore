@@ -12,3 +12,6 @@ mail/*
 # password file
 config/dovecot.passwd
 /config/dovecot.passwd
+
+# TLS keys/certs — auto-generated, never commit
+config/*.pem
