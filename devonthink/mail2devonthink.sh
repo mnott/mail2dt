@@ -61,7 +61,17 @@ for src in new cur; do
 					echo "Copied $TARGET";
 				fi
 				if [[ $CLEANUP == true ]]; then
-					rm "$FILE";
+					if [[ -f "$FILE" ]]; then
+						rm "$FILE"
+					else
+						# Dovecot/IMAP may rename by changing flags after ":2,".
+						# Match by Maildir unique prefix and remove any variant.
+						base="${FILE##*/}"
+						unique="${base%%:2,*}"
+						for stale in "$MAILDIR/$src/$unique":2,*; do
+							[[ -f "$stale" ]] && rm -f "$stale"
+						done
+					fi
 					RESYNC_NEEDED=true
 				fi
 			fi
