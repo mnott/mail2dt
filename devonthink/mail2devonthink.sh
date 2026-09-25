@@ -21,6 +21,10 @@ if [[ $VERBOSE == true ]]; then
 	echo Using Docker Container $CONTAINER_ID
 fi
 
+# IMAP login name, read from the container rather than hardcoded: the login
+# and the maildir directory are not necessarily the same name.
+IMAPUSR=$(docker exec "$CONTAINER_ID" sh -c 'cut -d: -f1 /mail/dovecot.passwd' 2>/dev/null | head -1)
+
 RESYNC_NEEDED=false
 for src in new cur; do
 	for i in $MAILDIR/$src/*; do
@@ -82,6 +86,6 @@ done
 # Tell Dovecot the mails are gone so Apple Mail stops showing ghosts.
 if [[ $RESYNC_NEEDED == true ]]; then
 	if [[ $VERBOSE == true ]]; then echo "Resyncing Dovecot Archive index"; fi
-	docker exec --privileged "$CONTAINER_ID" doveadm force-resync -u mnott Archive
+	docker exec --privileged "$CONTAINER_ID" doveadm force-resync -u "$IMAPUSR" Archive
 fi
 

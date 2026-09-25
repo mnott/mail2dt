@@ -15,3 +15,6 @@ config/dovecot.passwd
 
 # TLS keys/certs — auto-generated, never commit
 config/*.pem
+Notes/
+devonthink/Notes/
+memory/
