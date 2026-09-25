@@ -610,3 +610,16 @@ So this part is really just a very useful addon that you can use
 for any Docker containers. Especially the management of containers
 and images has been very useful for me, as I am too lazy to try to
 remember all the command line options that Docker comes along with.
+
+# GMAIL ARCHIVING
+
+Gmail has no archive folder: "archiving" a mail there just removes
+the INBOX label, and a mail without any label is invisible over
+IMAP, because Gmail exposes labels — not an archive — as folders.
+
+The [gmail/](gmail/) folder holds a Google Apps Script ("Gmail Archive
+Labeler") that is the Gmail-side half of this pipeline: it labels
+every archived message that carries no user label yet, so those
+mails appear under one IMAP folder this pipeline can pick them up
+from. See [gmail/README.md](gmail/README.md) for how it works and
+how to install it.
