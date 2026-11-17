@@ -10,7 +10,7 @@ on run
 	
 	tell application id "DNtp"
 		activate
-		show progress indicator "Archiving Mails…" steps ((count of ruleList) + 3) with cancel button
+		show progress indicator "Archiving Mails…" steps ((count of ruleList) + 4) with cancel button
 		step progress indicator "Importing Mails..."
 	end tell
 	
@@ -76,8 +76,47 @@ on run
 			end try
 		end tell
 	end repeat
+
+	-- Fallback: mails the rules left behind, e.g. received as BCC, where your
+	-- address is only in the delivery headers that smart rules cannot see.
+	-- route-mail.pl maps them via config/routes.txt (gitignored, see .example).
+	set homePath to POSIX path of (path to home folder)
+	set routeFile to homePath & "mail2dt/config/routes.txt"
+	set router to homePath & "mail2dt/devonthink/route-mail.pl"
+	tell application id "DNtp"
+		step progress indicator "Routing remaining mails..."
+		set itemList to children of incoming group
+	end tell
+	repeat with j from 1 to count of itemList
+		set theItem to item j of itemList
+		tell application id "DNtp"
+			set isMail to (type of theItem is not group) and (type of theItem is not smart group) and ((filename of theItem) ends with ".eml")
+			if isMail then set p to path of theItem
+		end tell
+		if isMail then
+			-- shell call outside the tell block (see above)
+			set t to ""
+			try
+				set t to do shell script "/usr/bin/perl " & quoted form of router & " " & quoted form of routeFile & " " & quoted form of p
+			end try
+			if t is not "" then
+				tell application id "DNtp"
+					set targetGroup to get record with uuid t
+					if targetGroup is missing value then
+						set end of ruleErrors to "routes.txt: no group with UUID " & t
+					else
+						try
+							move record theItem to targetGroup
+						on error errMsg
+							set end of ruleErrors to (name of theItem) & ": " & errMsg
+						end try
+					end if
+				end tell
+			end if
+		end if
+	end repeat
 	tell application id "DNtp" to hide progress indicator
-	
+
 	if ruleErrors is not {} then
 		set AppleScript's text item delimiters to return
 		set msg to ruleErrors as text

@@ -294,6 +294,31 @@ anything if you are happy with first seeing the Mails arrive in
 your Inbox - then you are done.
 
 
+### Fallback Routing (BCC Mails)
+
+Smart rules only see the `From:`, `To:` and `Cc:` headers. A mail you
+received as BCC has none of your addresses there, so a rule like
+"author or recipient contains example.com" never matches it, and it
+stays in the Inbox. The address it was really delivered to is only in
+the delivery headers (`Delivered-To:`, `X-Original-To:`, or the
+`for <you@example.com>` part of a `Received:` header).
+
+After running the smart rules, `ArchiveMails` therefore passes every
+mail still in the Inbox to `devonthink/route-mail.pl`, which reads all
+of those headers and checks them against `config/routes.txt`:
+
+	# pattern contained in any address   DEVONthink group UUID
+	example.com          00000000-0000-0000-0000-000000000000
+	me@private.example   11111111-1111-1111-1111-111111111111
+
+Copy `config/routes.txt.example` to `config/routes.txt` (gitignored)
+and mirror your smart rules there. Routes are tried in order, first match
+wins. You get a group's UUID via `Copy Item Link` (the part after
+`x-devonthink-item://`). Mail server host names in `Received:` headers
+are ignored, only actual addresses are matched. Mails that match no route
+stay in the Inbox. Without a `routes.txt`, this step does nothing.
+
+
 ## Use
 
 In daily use, you just would make sure that the Docker container is

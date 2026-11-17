@@ -21,3 +21,6 @@ memory/
 
 # local list of DEVONthink smart rules
 config/smartrules.txt
+
+# local fallback mail routing
+config/routes.txt

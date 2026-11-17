@@ -1,0 +1,9 @@
+# Fallback routing for mails the smart rules left in the inbox, e.g. mails you
+# received as BCC (your address is then only in the delivery headers).
+# Copy to routes.txt (which is gitignored) and adapt.
+#
+# One route per line: a pattern contained in any address, then the UUID of
+# the DEVONthink group to move the mail into (Copy Item Link, take the part
+# after x-devonthink-item://). Routes are tried in order, first match wins.
+example.com          00000000-0000-0000-0000-000000000000
+me@private.example   11111111-1111-1111-1111-111111111111
