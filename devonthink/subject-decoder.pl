@@ -1,68 +1,42 @@
 #!/usr/bin/perl -w
+# Reads an RFC 822 mail on STDIN, prints a filesystem-safe filename from its Subject.
 
-use MIME::Base64 qw(decode_base64);
-use URI::Encode qw(uri_decode);
-use URI::Escape qw(uri_unescape);
-use Encode qw(decode encode);
+use strict;
+use Encode qw(decode);
 use Unicode::Normalize;
 
 binmode STDOUT, ':utf8';
-binmode STDIN, ':utf8';
+binmode STDIN, ':raw';
 
-my $filename = "";
-my $filename_part = "";
-my $in_subject = 0;
-
-while ( <> ) {
-	if (m/^Subject:(.*)$/) {
-		$in_subject = 1;
-		$filename .= subject_decode($1);
-	} elsif ( $in_subject == 1 ) {
-		if ( m/^ (.*)$/ ) {
-			$filename .= subject_decode($1);
-		} else {
-			$filename =~ s/^\s+//; # remove leading whitespace
-			# Only clean up characters that are actually problematic for filesystems
-			$filename =~ s/[\/\\]/-/g;  # Replace slashes with hyphen
-			$filename =~ s/[\x00-\x1F\x7F]//g;  # Remove control characters
-			print "$filename\n";
-			last;
-		}
+# Collect the (possibly folded) Subject header as raw bytes.
+my $raw = undef;
+while (my $line = <STDIN>) {
+	last if $line =~ /^\r?$/;                       # end of headers
+	if (defined $raw) {
+		if ($line =~ /^[ \t]/) { $raw .= $line; next; }
+		last;
 	}
+	$raw = $1 if $line =~ /^Subject:(.*)$/is;
 }
+$raw = '' unless defined $raw;
+$raw =~ s/\r?\n//g;                                 # unfold
 
-sub subject_decode {
-	my ($subject) = @_;
-	1 while $subject =~ s{(.*?)=\?[uU][tT][fF]-?8\?[bB]\?(.*?)\?=(.*)}{"$1".decode('UTF-8', decode_base64($2))."$3"}eg;
-	1 while $subject =~ s{(.*?)=\?[uU][tT][fF]-?8\?[qQ]\?(.*?)\?=(.*)}{"$1".decode('UTF-8', utf8_decode($2))."$3"}eg;
-	1 while $subject =~ s{(.*?)=\?[iI][sS][oO].*?\?[bB]\?(.*?)\?=(.*)}{"$1".decode('ISO-8859-1', decode_base64($2))."$3"}eg;
-	1 while $subject =~ s{(.*?)=\?[iI][sS][oO].*?\?[qQ]\?(.*?)\?=(.*)}{"$1".decode('ISO-8859-1', iso_decode($2))."$3"}eg;
+# Undecoded 8-bit bytes in the header: assume UTF-8, fall back to Windows-1252.
+my $subject = eval { decode('UTF-8', $raw, Encode::FB_CROAK | Encode::LEAVE_SRC) };
+$subject = decode('cp1252', $raw) unless defined $subject;
 
-	# Normalize Unicode characters
-	$subject = NFC($subject);
+# Decode RFC 2047 encoded words (=?charset?B|Q?...?=), any charset.
+my $decoded = eval { decode('MIME-Header', $subject) };
+$subject = $decoded if defined $decoded;
 
-	$subject =~ s/&/u/g;
-	$subject =~ s/:/ -/g;
+$subject = NFC($subject);
+$subject =~ s/&/u/g;
+$subject =~ s/:/ -/g;
+$subject =~ s/[\/\\]/-/g;
+$subject =~ s/[\x00-\x1F\x7F]//g;
+$subject =~ s/\s+/ /g;
+$subject =~ s/^[\s.]+//;    # leading dots would make a hidden file DEVONthink ignores
+$subject =~ s/\s+$//;
+$subject = '(kein Betreff)' if $subject eq '';
 
-	# Remove any remaining control characters
-	$subject =~ s/[\x00-\x1F\x7F]//g;
-
-	return $subject;
-}
-
-sub utf8_decode {
-	my ($str) = @_;
-	$str =~ s/=/%/g;
-	$str = uri_unescape(uri_decode($str));
-	$str =~ s/_/ /g;  # Convert any underscores back to spaces
-	return $str;
-}
-
-sub iso_decode {
-	my ($str) = @_;
-	$str =~ s/=/%/g;
-	$str = uri_unescape(uri_decode($str, 'iso-8859-1'));
-	$str = uri_unescape(uri_decode($str, 'windows-1252'));
-	$str =~ s/_/ /g;  # Convert any underscores back to spaces
-	return $str;
-}
+print "$subject\n";

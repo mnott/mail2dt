@@ -1,0 +1,4 @@
+# One DEVONthink smart rule name per line, run in this order.
+# Copy to smartrules.txt (which is gitignored) and adapt.
+Archive Rule 1
+Archive Rule 2

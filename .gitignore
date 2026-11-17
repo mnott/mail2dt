@@ -18,3 +18,6 @@ config/*.pem
 Notes/
 devonthink/Notes/
 memory/
+
+# local list of DEVONthink smart rules
+config/smartrules.txt
