@@ -2,7 +2,14 @@
 
 ROOTDIR=~/mail2dt
 MAILUSR=mailuser
-DTINBOX=~/Library/Application\ Support/DEVONthink/Inbox/
+# Ask the running DEVONthink where its global Inbox lives, so this works for
+# whatever version is installed (DT3: ".../DEVONthink 3", DT4: ".../DEVONthink").
+# The import folder "Inbox" sits next to the "Inbox.dtBase2" database.
+DTINBOX="$(dirname "$(osascript -e 'tell application id "DNtp" to get path of inbox' 2>/dev/null)")/Inbox"
+if [[ ! -d "$DTINBOX" ]]; then
+	echo "Cannot find DEVONthink's Inbox folder ($DTINBOX)." >&2
+	exit 1
+fi
 MAILDIR=$ROOTDIR/mail/$MAILUSR/Maildir/.Archive
 CLEANUP=true
 VERBOSE=true

@@ -6,8 +6,11 @@ on run
 	try
 		set ruleList to paragraphs of (do shell script "grep -v -e '^[[:space:]]*#' -e '^[[:space:]]*$' " & quoted form of ruleFile)
 	end try
-	set inboxFolder to (POSIX path of (path to application support folder from user domain)) & "DEVONthink 3/Inbox/"
-	
+	-- The import folder "Inbox" sits next to the running DEVONthink's Inbox.dtBase2
+	-- (DT3: ".../DEVONthink 3", DT4: ".../DEVONthink"), so ask DEVONthink for it.
+	tell application id "DNtp" to set inboxDB to path of inbox
+	set inboxFolder to (do shell script "dirname " & quoted form of inboxDB) & "/Inbox/"
+
 	tell application id "DNtp"
 		activate
 		show progress indicator "Archiving Mails…" steps ((count of ruleList) + 4) with cancel button
